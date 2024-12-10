@@ -25,9 +25,9 @@ export default {
         }
     },
     actions: {
-        async getRecipeData({commit}) {
+        async getRecipeData({ commit }) {
             try {
-                const { data } = await axios.get("https://recipe-vue-batch2-default-rtdb.firebaseio.com/recipes.json")
+                const { data } = await axios.get("https://vue-js-project-665be-default-rtdb.asia-southeast1.firebasedatabase.app/recipes.json")
                 const arr = []
                 for (let key in data) {
                     arr.push({ id: key, ...data[key] })
@@ -39,8 +39,9 @@ export default {
         },
         async getRecipeDetail({ commit }, payload) {
             try {
-                const { data } = await axios.get(`https://recipe-vue-batch2-default-rtdb.firebaseio.com/recipes/${payload}.json`)
+                const { data } = await axios.get(`https://vue-js-project-665be-default-rtdb.asia-southeast1.firebasedatabase.app/recipes/${payload}.json`)
                 commit("setRecipeDetail", data)
+                console.log(data);
             } catch (err) {
                 console.log(err)
             }
@@ -55,7 +56,7 @@ export default {
             };
             try {
                 const { data } = await axios.post(
-                    `https://recipe-vue-batch2-default-rtdb.firebaseio.com/recipes.json?auth=${rootState.auth.token}`,
+                    `https://vue-js-project-665be-default-rtdb.asia-southeast1.firebasedatabase.app/recipes.json?auth=${rootState.auth.token}`,
                     newData
                 );
                 commit("setNewRecipe", { id: data.name, ...newData });
@@ -66,7 +67,7 @@ export default {
         async deleteRecipe({ dispatch, rootState }, payload) {
             try {
                 const { data } = await axios.delete(
-                    `https://recipe-vue-batch2-default-rtdb.firebaseio.com/recipes/${payload}.json?auth=${rootState.auth.token}`
+                    `https://vue-js-project-665be-default-rtdb.asia-southeast1.firebasedatabase.app/recipes/${payload}.json?auth=${rootState.auth.token}`
                 );
                 await dispatch("getRecipeData")
             } catch (err) {
@@ -76,7 +77,7 @@ export default {
         async updateRecipe({ dispatch, rootState }, { id, newRecipe }) {
             try {
                 const { data } = await axios.put(
-                    `https://recipe-vue-batch2-default-rtdb.firebaseio.com/recipes/${id}.json?auth=${rootState.auth.token}`,
+                    `https://vue-js-project-665be-default-rtdb.asia-southeast1.firebasedatabase.app/recipes/${id}.json?auth=${rootState.auth.token}`,
                     newRecipe
                 );
                 await dispatch("getRecipeData")
@@ -84,8 +85,8 @@ export default {
                 console.log(error);
             }
         },
-        async updateLike({ dispatch, rootState }, {status, recipeId, recipe}) {
-            const userId = rootState.auth.userLogin.userId;            
+        async updateLike({ dispatch, rootState }, { status, recipeId, recipe }) {
+            const userId = rootState.auth.userLogin.userId;
             if (status) {
                 const newLikes = recipe.likes.filter((like) => like !== userId);
                 recipe.likes = newLikes;
@@ -94,7 +95,7 @@ export default {
             }
             try {
                 const data = await axios.put(
-                    `https://recipe-vue-batch2-default-rtdb.firebaseio.com/recipes/${recipeId}.json?auth=${rootState.auth.token}`,
+                    `https://vue-js-project-665be-default-rtdb.asia-southeast1.firebasedatabase.app/recipes/${recipeId}.json?auth=${rootState.auth.token}`,
                     recipe
                 );
                 await dispatch("getRecipeData")
